@@ -1,25 +1,49 @@
 # Copyright (C) Inverse inc.
+{
+	admin off
+	log {
+		output stdout
+		format transform "{common_log}"
+	}
+	auto_https off
+}
+
 :8890 {
-  logger {
-    level INFO
-  }
-  httpdportalpreview
+	route {
+		logger {
+			level INFO
+		}
+
+		httpdportalpreview
+	}
 }
 
-:8891/static/doc {
-  root /usr/local/pf/docs
-}
+:8891 {
+	@doc {
+		path /static/doc/*
+		path /static/doc/
+		path /static/doc
+	}
 
-:8891/static {
-  root /usr/local/pf/html/pfappserver/root
-}
+	handle @doc {
+		uri strip_prefix /static/doc
+		file_server {
+			index PacketFence_Installation_Guide.html
+			root /usr/local/pf/docs
+		}
+	}
 
-:8891/common {
-  root /usr/local/pf/html/common
-}
+	@admin {
+		path /admin/*
+		path /admin/
+		path /admin
+	}
 
-:8891/admin {
-  root /usr/local/pf/html/pfappserver/root/dist
-  index index.html
+	handle @admin {
+		uri strip_prefix /admin
+		file_server {
+			index index.html
+			root /usr/local/pf/html/pfappserver/root/dist
+		}
+	}
 }
-

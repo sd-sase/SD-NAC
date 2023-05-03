@@ -1,6 +1,17 @@
-0.0.0.0:22225 {
-  logger {
-    level INFO
-  }
-  pfpki
+{
+	admin off
+	log {
+		output stdout
+		format transform "{common_log}"
+	}
+	auto_https off
+}
+
+:22225 {
+	route {
+		logger {
+			level INFO
+		}
+		pfpki
+	}
 }
