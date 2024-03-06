@@ -121,6 +121,7 @@ sub cleanup_options {
     my $accessListMapping = $placeholder->{AccessListMapping};
     my $urlMapping = $placeholder->{UrlMapping};
     my $vpnMapping = $placeholder->{VpnMapping};
+    my $interfaceMapping = $placeholder->{InterfaceMapping};
     my $roleMapping = $placeholder->{ControllerRoleMapping};
     for my $a (@{$allowed_roles}) {
         my $r = $a->{value};
@@ -128,6 +129,7 @@ sub cleanup_options {
         $meta->{"${r}AccessList"} = mapping_meta($r, $accessListMapping, 'accesslist', $self->json_false);
         $meta->{"${r}Url"} = mapping_meta($r, $urlMapping, 'url', $self->json_false);
         $meta->{"${r}Vpn"} = mapping_meta($r, $vpnMapping, 'vpn', $self->json_false);
+        $meta->{"${r}Interface"} = mapping_meta($r, $interfaceMapping, 'interface', $self->json_false);
         $meta->{"${r}Role"} = mapping_meta($r, $roleMapping, 'controller_role', $self->json_false);
     }
 }

@@ -180,6 +180,7 @@ sub new {
         '_RoleMap'                      => 'enabled',
         '_UrlMap'                       => 'enabled',
         '_VpnMap'                       => 'enabled',
+        '_InterfaceMap'                 => 'enabled',
         '_UsePushACLs'                  => 'disabled',
         '_UseDownloadableACLs'          => 'disabled',
         '_DownloadableACLsLimit'        => 0,
