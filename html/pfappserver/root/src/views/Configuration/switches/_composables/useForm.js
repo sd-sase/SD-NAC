@@ -203,6 +203,7 @@ const useForm = (props, context) => {
     isVpnMap,
     isUrlMap,
     isVlanMap,
+    isInterfaceMap,
     roles,
 
     isUsePushACLs,
