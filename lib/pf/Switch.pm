@@ -857,6 +857,42 @@ sub _parentRoleForVpn {
     return undef;
 }
 
+=item getInterfaceByName
+
+Get the switch-specific interface names in role in switches.conf
+
+=cut
+
+sub getInterfaceByName {
+    my ($self, $roleName) = @_;
+    my $logger = $self->logger;
+
+
+    if (!defined($self->{'_interface'}) || !defined($self->{'_interface'}{$roleName})) {
+        my $parent = _parentRoleForInterface($roleName);
+        if (defined $parent && length($parent)) {
+            return $self->getInterfaceByName($parent);
+        }
+        # VPN name doesn't exist
+        $pf::StatsD::statsd->increment(called() . ".error" );
+        $logger->warn("No parameter ${roleName}Interface found in conf/switches.conf for the switch " . $self->{_id});
+        return undef;
+    }
+
+    # return if found
+    return $self->{'_interface'}->{$roleName} if (defined($self->{'_interface'}->{$roleName}));
+
+    # otherwise log and return undef
+    $logger->trace("(".$self->{_id}.") No parameter ${roleName}Interface found in conf/switches.conf");
+    return;
+}
+
+sub _parentRoleForInterface {
+    my ($name) = @_;
+    # not yet supported
+    return undef;
+}
+
 
 =item setVlanByName - set the ifIndex VLAN to the VLAN identified by given name in switches.conf
 
