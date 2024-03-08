@@ -186,6 +186,7 @@ sub new {
         '_DownloadableACLsLimit'        => 0,
         '_ACLsLimit'                    => 0,
         '_ACLsType'                     => undef,
+        '_interfaces'                   => undef,
         map { "_".$_ => $argv->{$_} } keys %$argv,
     }, $class;
     return $self;
@@ -868,7 +869,7 @@ sub getInterfaceByName {
     my $logger = $self->logger;
 
 
-    if (!defined($self->{'_interface'}) || !defined($self->{'_interface'}{$roleName})) {
+    if (!defined($self->{'_interfaces'}) || !defined($self->{'_interfaces'}{$roleName})) {
         my $parent = _parentRoleForInterface($roleName);
         if (defined $parent && length($parent)) {
             return $self->getInterfaceByName($parent);
@@ -880,7 +881,7 @@ sub getInterfaceByName {
     }
 
     # return if found
-    return $self->{'_interface'}->{$roleName} if (defined($self->{'_interface'}->{$roleName}));
+    return $self->{'_interfaces'}->{$roleName} if (defined($self->{'_interfaces'}->{$roleName}));
 
     # otherwise log and return undef
     $logger->trace("(".$self->{_id}.") No parameter ${roleName}Interface found in conf/switches.conf");
@@ -4286,7 +4287,12 @@ sub generateAnsibleConfiguration {
 
     foreach my $role (keys %ConfigRoles) {
         my $acls = $self->getRoleAccessListByName($role);
-        next if !defined($acls);
+        my $interfaces = $self->getInterfaceByName($role);
+        if ($interfaces) {
+            my @interfaces = split(',',$interfaces);
+            $vars{'switches'}{$switch_id}{'interface'}{$role} = \@interfaces;
+        }
+	next if !defined($acls);
         my $out_acls;
         my $in_acls;
         while($acls =~ /([^\n]+)\n?/g) {
