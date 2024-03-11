@@ -187,6 +187,7 @@ sub new {
         '_ACLsLimit'                    => 0,
         '_ACLsType'                     => undef,
         '_interfaces'                   => undef,
+        '_snapshots' => [],
         map { "_".$_ => $argv->{$_} } keys %$argv,
     }, $class;
     return $self;
@@ -4348,6 +4349,17 @@ Return implicit acl
 sub implicit_acl {
     my ($self) = @_;
     return $FALSE;
+}
+
+=head2 snapshot
+
+=cut
+
+sub snapshot {
+    my ($self) = @_;
+    my $snap = {%{$self}};
+    delete @{$snap}{qw(_sessionRead _sessionWrite _sessionControllerWrite)};
+    push @{$self->{_snapshot}}, $snap;
 }
 
 =back
