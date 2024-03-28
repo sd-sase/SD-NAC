@@ -1,4 +1,5 @@
 #!make
+THIS_FILE := $(lastword $(MAKEFILE_LIST))
 include .local_env
 export $(shell sed 's/=.*//' .local_env)
 
@@ -44,26 +45,30 @@ install-debian:
 	apt-get install -y firefox-esr
 
 install:
+	#cypress@12.17.4
 	npm install cypress -g --allow-root --unsafe-perm=true
 	npm ci --legacy-peer-deps
 
 test:
-		DEBUG=$(DEBUG) \
-		DISPLAY= \
-		NO_COLOR=1 \
-		BROWSERSLIST_IGNORE_OLD_DATA=true \
-		CYPRESS_baseUrl=$(BASE_URL) \
-		cypress run --browser $(BROWSER) --config-file $(CONFIG_FILE) --config $(CONFIG) --e2e --env tags=[$(TAGS)] ; \
+	DEBUG=$(DEBUG) \
+	DISPLAY= \
+	NO_COLOR=1 \
+	BROWSERSLIST_IGNORE_OLD_DATA=true \
+	CYPRESS_baseUrl=$(BASE_URL) \
+	npx cypress run --browser $(BROWSER) --config-file $(CONFIG_FILE) --config $(CONFIG) --e2e --env tags=[$(TAGS)] ; \
+
+test-concurrent:
+	bash concurrent.sh $(MAKE) -f $(THIS_FILE) test
 
 test-project:
-		DEBUG=$(DEBUG) \
-		DISPLAY= \
-		NO_COLOR=1 \
-		BROWSERSLIST_IGNORE_OLD_DATA=true \
-		CYPRESS_baseUrl=$(BASE_URL) \
-		cypress run --browser $(BROWSER) --config-file $(CONFIG_FILE) --config projectId=$(PROJECT_ID),$(CONFIG) --e2e --ci-build-id $(CI_PIPELINE_ID) --parallel --record --key $(RECORD_KEY) --tag $(TAG) --env tags=[$(TAGS)] ; \
+	DEBUG=$(DEBUG) \
+	DISPLAY= \
+	NO_COLOR=1 \
+	BROWSERSLIST_IGNORE_OLD_DATA=true \
+	CYPRESS_baseUrl=$(BASE_URL) \
+	npx cypress run --browser $(BROWSER) --config-file $(CONFIG_FILE) --config projectId=$(PROJECT_ID),$(CONFIG) --e2e --ci-build-id $(CI_PIPELINE_ID) --parallel --record --key $(RECORD_KEY) --tag $(TAG) --env tags=[$(TAGS)] ; \
 
 test-x11:
 	DEBUG=$(DEBUG) \
 	CYPRESS_baseUrl=$(BASE_URL) \
-	cypress open --browser $(BROWSER) --config-file $(CONFIG_FILE) --config $(CONFIG)
+	npx cypress open --browser $(BROWSER) --config-file $(CONFIG_FILE) --config $(CONFIG)
