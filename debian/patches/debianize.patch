@@ -55,21 +55,6 @@ index 8045a372d3..7437d09bae 100644
  ExecStart=/usr/sbin/haproxy -Ws -f /usr/local/pf/var/conf/haproxy-db.conf -p /usr/local/pf/var/run/haproxy-db.pid
  ExecReload=/bin/perl -I/usr/local/pf/lib -I/usr/local/pf/lib_perl/lib/perl5 '-Mpf::services::manager::haproxy_db' -e 'pf::services::manager::haproxy_db->new()->generateConfig()'
  ExecReload=/bin/kill -USR2 $MAINPID
-diff --git a/conf/systemd/packetfence-iptables.service b/conf/systemd/packetfence-iptables.service
-index a3ac735600..be76136201 100644
---- a/conf/systemd/packetfence-iptables.service
-+++ b/conf/systemd/packetfence-iptables.service
-@@ -7,8 +7,8 @@ After=packetfence-base.target packetfence-config.service
- [Service]
- StartLimitBurst=3
- StartLimitInterval=10
--ExecStart=/bin/perl -I/usr/local/pf/lib -I/usr/local/pf/lib_perl/lib/perl5 -Mpf::db -Mpf::services::manager::iptables -e 'my $db ; while(!$db) { eval { $db = db_ping() } ; sleep 1 } ; pf::services::manager::iptables->new()->startAndCheck()'
--ExecStop=/bin/perl -I/usr/local/pf/lib -I/usr/local/pf/lib_perl/lib/perl5 '-Mpf::services::manager::iptables' -e 'pf::services::manager::iptables->new()->_stop()'
-+ExecStart=/usr/bin/perl -I/usr/local/pf/lib -I/usr/local/pf/lib_perl/lib/perl5 -Mpf::db -Mpf::services::manager::iptables -e 'my $db ; while(!$db) { eval { $db = db_ping() } ; sleep 1 } ; pf::services::manager::iptables->new()->startAndCheck()'
-+ExecStop=/usr/bin/perl -I/usr/local/pf/lib -I/usr/local/pf/lib_perl/lib/perl5 '-Mpf::services::manager::iptables' -e 'pf::services::manager::iptables->new()->_stop()'
- Slice=packetfence.slice
- 
- [Install]
 diff --git a/conf/systemd/packetfence-keepalived.service b/conf/systemd/packetfence-keepalived.service
 index 98a2a340d3..9605ef030a 100644
 --- a/conf/systemd/packetfence-keepalived.service
