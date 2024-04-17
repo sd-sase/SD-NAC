@@ -1,0 +1,42 @@
+# Needed By system
+[block]
+target=REJECT
+short=Block
+description=Unsolicited incoming network packets are rejected. Incoming packets that are related to outgoing network connections are accepted. Outgoing network connections are allowed.
+
+[drop]
+target=DROP
+short=Drop
+description=Unsolicited incoming network packets are dropped. Incoming packets that are related to outgoing network connections are accepted. Outgoing network connections are allowed.
+
+[trusted]
+target=ACCEPT
+short=Trusted
+description=All network connections are accepted.
+
+[eth0]
+short=Management interface
+masquerade=yes
+target=default
+services=haproxy-admin,ssh,http,https
+interface=eth0
+version=0.1
+sources=eth0_source1,eth0_source2
+protocols=eth0_procotol1
+
+[eth0_source1]
+name=address
+address=127.0.0.1
+[eth0_source2]
+name=address
+address=224.0.0.0/8
+
+[eth0_procotol1]
+value=vrrp
+
+[docker0]
+short=Docker Interface
+masquerade=yes
+target=ACCEPT
+interface=docker0
+version = 0.1
