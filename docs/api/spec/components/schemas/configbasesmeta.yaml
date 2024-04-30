@@ -309,6 +309,8 @@ ConfigBasesMeta:
             $ref: '#/components/schemas/Meta'
           force_listener_update_on_ack:
             $ref: '#/components/schemas/Meta'
+          learn_network_cidr_by_role:
+            $ref: '#/components/schemas/Meta'
           hostname_change_detection:
             $ref: '#/components/schemas/Meta'
           id:
